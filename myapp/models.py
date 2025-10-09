@@ -5,22 +5,22 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password= None, **extra_fields):
-        if not mail:
+        if not email:
             raise ValueError("Email is Required")
 
-            email = self.normalize_mail(email)
+        email = self.normalize_email(email)
 
-            user = self.model(email=email, **extra_fields)
-            user.set_password(password)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
 
-            user.save()
-            return user
+        user.save()
+        return user
 
-        def create_superuser(self, email, password=None, **extra_fields):
-            extra_fields.setdefault('is_staff', True)
-            extra_fields.setdefault('is_superuser', True)
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
-            return self.create_user(self, email, password, **extra_fields)
+        return self.create_user(self, email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -36,5 +36,5 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.email
+def __str__(self):
+    return self.email
