@@ -8,9 +8,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'password']  
+        fields = ['username', 'email', 'first_name', 'last_name', 'password']  
 
-    def create(self, validated_date):
+    def create(self, validated_data):
         password =self.validated_data.pop('password')
         user = User.objects.create_user(password=password, **self.validated_data)
 
@@ -33,15 +33,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 pass
 
         else:
-            user = authhenticate(email=username_or_email, password=password)
+            user = authenticate(email=username_or_email, password=password)
             if user is None:
-                raise serializers.ValidationErro('Invalid Credentials or Invalid account')
+                raise serializers.ValidationError('Invalid Credentials or Invalid account')
 
 
-            data = super().validate(attrs)
-            data['user'] = {
-                'id': user.id,
-                'email': user.email,
-                'first_name': user.first_name
-            }
-            return data
+        data = super().validate(attrs)
+        data['user'] = {
+            'id': user.id,
+            'email': user.email,
+            'first_name': user.first_name
+        }
+        return data
